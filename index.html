@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Loop Timer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * {
       box-sizing: border-box;
@@ -11,23 +11,29 @@
 
     html, body {
       margin: 0;
-      height: 100%;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
       font-family: sans-serif;
       overflow: hidden;
+      background: #ffffff;
     }
 
     body {
       display: flex;
       flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 5vw;
-      padding: 5vw;
     }
 
     .runner-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .runner-bar {
       width: 20vw;
-      height: 60vh;
+      height: 80vh;
       background-color: #ddd;
       position: relative;
       border-radius: 10px;
@@ -44,10 +50,12 @@
     }
 
     .control-panel {
+      flex: 1;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      gap: 2vh;
+      gap: 3vh;
     }
 
     .inputs {
@@ -56,62 +64,68 @@
     }
 
     input[type="number"] {
-      width: 15vw;
+      width: 20vw;
       padding: 1vh;
-      font-size: 5vw;
-      background-color: #e0f0ff;
-      border: 1px solid #aaa;
-      border-radius: 8px;
+      font-size: 6vw;
       text-align: center;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      background-color: #e0f0ff;
     }
 
     button {
-      font-size: 5vw;
+      font-size: 6vw;
       padding: 1vh 2vw;
     }
 
     .loop-count {
-      font-size: 8vw;
-      border: 1px solid black;
-      width: 20vw;
-      height: 20vw;
+      font-size: 10vw;
+      border: 2px solid black;
+      width: 30vw;
+      height: 30vw;
       text-align: center;
-      line-height: 20vw;
+      line-height: 30vw;
     }
 
-    @media (max-width: 768px) {
+    @media (orientation: portrait) {
       body {
         flex-direction: column;
-        gap: 4vh;
-        padding: 4vh 2vw;
       }
 
       .runner-box {
-        width: 40vw;
+        height: 50vh;
+        width: 100vw;
+      }
+
+      .runner-bar {
+        width: 20vw;
         height: 40vh;
       }
 
-      .loop-count {
-        width: 30vw;
-        height: 30vw;
-        font-size: 10vw;
-        line-height: 30vw;
+      .control-panel {
+        flex: none;
+        height: 50vh;
+        gap: 2vh;
       }
 
       input[type="number"] {
-        width: 20vw;
+        width: 25vw;
         font-size: 6vw;
       }
 
-      button {
-        font-size: 6vw;
+      .loop-count {
+        width: 25vw;
+        height: 25vw;
+        line-height: 25vw;
       }
     }
   </style>
 </head>
 <body>
   <div class="runner-box">
-    <div class="bar-fill" id="barFill"></div>
+    <div class="runner-bar">
+      <div class="bar-fill" id="barFill"></div>
+    </div>
   </div>
   <div class="control-panel">
     <div class="inputs">
