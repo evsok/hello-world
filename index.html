@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Loop Timer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * {
       box-sizing: border-box;
@@ -10,7 +11,6 @@
 
     html, body {
       margin: 0;
-      padding: 0;
       height: 100%;
       font-family: sans-serif;
       overflow: hidden;
@@ -18,19 +18,20 @@
 
     body {
       display: flex;
+      flex-direction: row;
       justify-content: center;
       align-items: center;
-      gap: 40px;
-      padding: 20px;
+      gap: 5vw;
+      padding: 5vw;
     }
 
     .runner-box {
-      width: 120px;
-      height: 400px;
+      width: 20vw;
+      height: 60vh;
       background-color: #ddd;
       position: relative;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     .bar-fill {
@@ -46,36 +47,65 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 2vh;
     }
 
     .inputs {
       display: flex;
-      gap: 10px;
+      gap: 2vw;
     }
 
     input[type="number"] {
-      width: 60px;
-      padding: 8px;
-      font-size: 16px;
+      width: 15vw;
+      padding: 1vh;
+      font-size: 5vw;
       background-color: #e0f0ff;
       border: 1px solid #aaa;
-      border-radius: 5px;
+      border-radius: 8px;
       text-align: center;
     }
 
     button {
-      font-size: 14px;
-      padding: 6px 12px;
+      font-size: 5vw;
+      padding: 1vh 2vw;
     }
 
     .loop-count {
-      font-size: 32px;
+      font-size: 8vw;
       border: 1px solid black;
-      width: 100px;
-      height: 100px;
+      width: 20vw;
+      height: 20vw;
       text-align: center;
-      line-height: 100px;
+      line-height: 20vw;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+        gap: 4vh;
+        padding: 4vh 2vw;
+      }
+
+      .runner-box {
+        width: 40vw;
+        height: 40vh;
+      }
+
+      .loop-count {
+        width: 30vw;
+        height: 30vw;
+        font-size: 10vw;
+        line-height: 30vw;
+      }
+
+      input[type="number"] {
+        width: 20vw;
+        font-size: 6vw;
+      }
+
+      button {
+        font-size: 6vw;
+      }
     }
   </style>
 </head>
@@ -85,8 +115,8 @@
   </div>
   <div class="control-panel">
     <div class="inputs">
-      <input type="number" id="workInput" placeholder="Work" value="10" />
-      <input type="number" id="restInput" placeholder="Rest" value="5" />
+      <input type="number" id="workInput" value="10" />
+      <input type="number" id="restInput" value="5" />
     </div>
     <button onclick="applySettings()">APPLY</button>
     <div class="loop-count" id="loopCount">0</div>
