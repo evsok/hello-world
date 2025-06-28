@@ -2,111 +2,135 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stopwatch</title>
+  <title>Loop Timer</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
+      padding: 20px;
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      display: flex;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .runner-container {
+      width: 300px;
+      height: 400px;
+      background-color: #fff3cd;
+      border: 2px solid #f7d08a;
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .runner-bar {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 0%;
+      background-color: red;
+      transition: height 1s linear;
+    }
+
+    .control-panel {
+      margin-left: 40px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: start;
-      height: 100vh;
+      gap: 12px;
     }
 
-    form {
-      margin-top: 20px;
+    .inputs {
       display: flex;
       gap: 10px;
     }
 
-    input[type="number"] {
-      padding: 10px;
+    .inputs input {
+      width: 60px;
+      padding: 8px;
       font-size: 16px;
-      width: 100px;
+      background-color: #e3f2fd;
+      text-align: center;
     }
 
-    .timer-button {
+    .apply-btn {
+      padding: 10px 20px;
       font-size: 16px;
-      padding: 10px 16px;
+      font-weight: bold;
+      background-color: #d4edda;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
-      background-color: #4CAF50;
-      color: white;
     }
 
-    .timer-button:hover {
-      background-color: #45a049;
-    }
-
-    .bar-container {
-      width: 90px;
-      height: 300px;
-      margin-top: 40px;
-      background-color: #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .bar-fill {
-      background-color: #2196F3;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      bottom: 0;
-      transition: height 1s linear;
+    .loop-counter {
+      margin-top: 20px;
+      border: 1px solid black;
+      padding: 20px 40px;
+      font-size: 24px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <form onsubmit="setTimer(event)">
-    <input type="number" id="duration" min="1" value="10" required>
-    <button type="submit" class="timer-button">Apply</button>
-  </form>
+  <div class="runner-container">
+    <div class="runner-bar" id="runnerBar"></div>
+  </div>
 
-  <div class="bar-container">
-    <div class="bar-fill" id="barFill"></div>
+  <div class="control-panel">
+    <div class="inputs">
+      <input type="number" id="workTime" value="10" min="1">
+      <input type="number" id="restTime" value="5" min="1">
+    </div>
+    <button class="apply-btn" onclick="startLoop()">APPLY</button>
+    <div class="loop-counter" id="loopCounter">0</div>
   </div>
 
   <script>
-    let totalSeconds = 10;
-    let remainingSeconds = totalSeconds;
-    let timerInterval = null;
+    let workSeconds = 10;
+    let restSeconds = 5;
+    let runnerBar = document.getElementById('runnerBar');
+    let loopCounter = document.getElementById('loopCounter');
+    let loopCount = 0;
+    let interval;
+    let isWorking = true;
+    let timeRemaining = workSeconds;
 
-    function updateTimer() {
-      remainingSeconds--;
+    function startLoop() {
+      clearInterval(interval);
+      workSeconds = parseInt(document.getElementById('workTime').value);
+      restSeconds = parseInt(document.getElementById('restTime').value);
+      loopCount = 0;
+      loopCounter.textContent = loopCount;
+      isWorking = true;
+      timeRemaining = workSeconds;
+      runnerBar.style.backgroundColor = 'red';
+      runnerBar.style.height = '0%';
+      interval = setInterval(tick, 1000);
+    }
 
-      if (remainingSeconds < 0) {
-        remainingSeconds = totalSeconds;
+    function tick() {
+      timeRemaining--;
+
+      const total = isWorking ? workSeconds : restSeconds;
+      const percent = (isWorking ? (total - timeRemaining) : timeRemaining) / total * 100;
+
+      runnerBar.style.height = `${percent}%`;
+      runnerBar.style.backgroundColor = isWorking ? 'red' : 'green';
+
+      if (timeRemaining <= 0) {
+        if (isWorking) {
+          isWorking = false;
+          timeRemaining = restSeconds;
+          runnerBar.style.height = '100%';
+        } else {
+          isWorking = true;
+          timeRemaining = workSeconds;
+          runnerBar.style.height = '0%';
+          loopCount++;
+          loopCounter.textContent = loopCount;
+        }
       }
-
-      const percent = remainingSeconds / totalSeconds;
-      document.getElementById('barFill').style.height = `${percent * 100}%`;
     }
-
-    function startLoopingTimer() {
-      clearInterval(timerInterval);
-      timerInterval = setInterval(updateTimer, 1000);
-    }
-
-    function setTimer(event) {
-      event.preventDefault();
-      const input = document.getElementById('duration');
-      totalSeconds = parseInt(input.value, 10);
-      remainingSeconds = totalSeconds;
-
-      updateTimer();
-      startLoopingTimer();
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      updateTimer();
-    });
   </script>
 
 </body>
