@@ -1,224 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Loop Timer</title>
-  <style>
-    * {
-      box-sizing: border-box;
+<meta charset="UTF-8" />
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no" />
+<title>Loop Timer</title>
+
+<style>
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%;font-family:sans-serif;overflow:hidden}
+
+  /* -------  Layout  ------- */
+  body{
+    display:flex;
+    flex-direction:column;            /* portrait default */
+    align-items:center;
+    justify-content:space-evenly;
+    padding:2vh;
+    gap:4vh;
+  }
+
+  .runner-bar{
+    width:60vw;                       /* wide on phones  */
+    height:50vh;
+    background:#ddd;
+    border-radius:12px;
+    position:relative;
+    box-shadow:0 0 8px rgba(0,0,0,.2);
+  }
+  .bar-fill{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:0;
+    background:red;
+    transition:height 1s linear;
+  }
+
+  .inputs{
+    display:flex;
+    gap:4vw;
+  }
+  input[type=number]{
+    width:25vw;
+    padding:1.2vh 0;
+    font-size:7vw;
+    text-align:center;
+    border:1px solid #888;
+    border-radius:8px;
+    background:#e9f2ff;
+  }
+  button{
+    font-size:7vw;
+    padding:1.2vh 4vw;
+    border:none;
+    border-radius:8px;
+    background:#cfe9cf;
+  }
+  .loop-count{
+    font-size:10vw;
+    width:40vw;
+    height:40vw;
+    border:2px solid #000;
+    text-align:center;
+    line-height:40vw;
+  }
+
+  /* ----- landscape phones / tablets ----- */
+  @media (orientation:landscape){
+    body{flex-direction:row;gap:6vw;padding:2vw}
+    .runner-bar{
+      width:20vw;
+      height:80vh;
     }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      font-family: sans-serif;
-      overflow: hidden;
-      background: #ffffff;
-      font-size: 16px; /* Base font size for rem units */
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .runner-box {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
-
-    .runner-bar {
-      width: 30vw; /* Slightly larger for visibility */
-      height: 60vh;
-      background-color: #ddd;
-      position: relative;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .bar-fill {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 0;
-      background-color: red;
-      transition: height 1s linear;
-    }
-
-    .control-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 1rem;
-    }
-
-    .inputs {
-      display: flex;
-      gap: 1rem;
-      width: 100%;
-      justify-content: center;
-    }
-
-    input[type="number"] {
-      width: 35vw; /* Larger input fields */
-      padding: 0.75rem;
-      font-size: 1.5rem; /* Larger text */
-      text-align: center;
-      border: 1px solid #aaa;
-      border-radius: 6px;
-      background-color: #e0f0ff;
-    }
-
-    button {
-      font-size: 1.5rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: 6px;
-      border: 1px solid #aaa;
-      background-color: #f0f0f0;
-      cursor: pointer;
-      width: 50%; /* Wider button for touch */
-      max-width: 200px;
-    }
-
-    .loop-count {
-      font-size: 2.5rem;
-      border: 2px solid black;
-      width: 40vw;
-      height: 40vw;
-      max-width: 150px;
-      max-height: 150px;
-      text-align: center;
-      line-height: 40vw;
-      border-radius: 10px;
-    }
-
-    /* Mobile-specific adjustments */
-    @media (max-width: 600px) or (orientation: portrait) {
-      .runner-bar {
-        width: 40vw; /* Larger bar for small screens */
-        height: 50vh;
-      }
-
-      input[type="number"] {
-        width: 40vw;
-        font-size: 1.25rem;
-        padding: 0.5rem;
-      }
-
-      button {
-        font-size: 1.25rem;
-        padding: 0.5rem 1rem;
-        width: 60%;
-      }
-
-      .loop-count {
-        width: 35vw;
-        height: 35vw;
-        max-width: 120px;
-        max-height: 120px;
-        font-size: 2rem;
-        line-height: 35vw;
-      }
-
-      .control-panel {
-        gap: 1rem;
-      }
-    }
-  </style>
+    input[type=number]{width:12vw;font-size:4vw}
+    button{font-size:4vw}
+    .loop-count{width:18vw;height:18vw;line-height:18vw;font-size:5vw}
+  }
+</style>
 </head>
 <body>
-  <div class="runner-box">
-    <div class="runner-bar">
-      <div class="bar-fill" id="barFill"></div>
-    </div>
+
+  <div class="runner-bar">
+    <div id="bar" class="bar-fill"></div>
   </div>
-  <div class="control-panel">
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:3vh">
     <div class="inputs">
-      <input type="number" id="workInput" value="10" />
-      <input type="number" id="restInput" value="5" />
+      <input id="work" type="number" value="10">
+      <input id="rest" type="number" value="5">
     </div>
-    <button onclick="applySettings()">APPLY</button>
-    <div class="loop-count" id="loopCount">0</div>
+    <button onclick="apply()">APPLY</button>
+    <div id="loops" class="loop-count">0</div>
   </div>
 
-  <script>
-    let workDuration = 10;
-    let restDuration = 5;
-    let currentPhase = 'work';
-    let timer = 0;
-    let interval = null;
-    let loopCounter = 0;
-    const barFill = document.getElementById('barFill');
-    let wakeLock = null;
+<script>
+let work=10, rest=5, phase='work', t=0, loops=0, id=null;
+const bar=document.getElementById('bar'), loopsBox=document.getElementById('loops');
 
-    async function requestWakeLock() {
-      try {
-        wakeLock = await navigator.wakeLock.request('screen');
-      } catch (err) {
-        console.error(`${err.name}, ${err.message}`);
-      }
-    }
+function apply(){
+  work = +document.getElementById('work').value || 10;
+  rest = +document.getElementById('rest').value || 5;
+  loops = 0; loopsBox.textContent = loops;
+  phase='work'; t=0;
+  clearInterval(id);
+  tick();                                    // draw immediately
+  id=setInterval(tick,1000);
+  wakelock();                                // keep screen on
+}
 
-    document.addEventListener('visibilitychange', () => {
-      if (wakeLock !== null && document.visibilityState === 'visible') {
-        requestWakeLock();
-      }
-    });
+function tick(){
+  t++;
+  const dur = phase==='work'?work:rest;
+  if(t>dur){
+    if(phase==='rest'){loops++;loopsBox.textContent=loops;}
+    phase = phase==='work'?'rest':'work';
+    t=1;
+  }
+  draw(t/dur);
+}
 
-    function applySettings() {
-      workDuration = parseInt(document.getElementById('workInput').value) || 10;
-      restDuration = parseInt(document.getElementById('restInput').value) || 5;
-      loopCounter = 0;
-      document.getElementById('loopCount').textContent = loopCounter;
-      startLoop();
-      requestWakeLock();
-    }
+function draw(p){
+  if(phase==='work'){
+    bar.style.background='red';
+    bar.style.height = (p*100)+'%';
+  }else{
+    bar.style.background='green';
+    bar.style.height = ((1-p)*100)+'%';
+  }
+}
 
-    function startLoop() {
-      clearInterval(interval);
-      timer = 0;
-      currentPhase = 'work';
-      updateBar();
-      interval = setInterval(updateTimer, 1000);
-    }
-
-    function updateTimer() {
-      timer++;
-      let duration = currentPhase === 'work' ? workDuration : restDuration;
-      let progress = timer / duration;
-
-      if (progress > 1) {
-        if (currentPhase === 'rest') {
-          loopCounter++;
-          document.getElementById('loopCount').textContent = loopCounter;
-        }
-        currentPhase = currentPhase === 'work' ? 'rest' : 'work';
-        timer = 0;
-        duration = currentPhase === 'work' ? workDuration : restDuration;
-        progress = 0;
-      }
-
-      updateBar(progress);
-    }
-
-    function updateBar(progress = 0) {
-      if (currentPhase === 'work') {
-        barFill.style.backgroundColor = 'red';
-        barFill.style.height = `${progress * 100}%`;
-      } else {
-        barFill.style.backgroundColor = 'green';
-        barFill.style.height = `${(1 - progress) * 100}%`;
-      }
-    }
-  </script>
+/* ----- Android wake-lock ----- */
+let lock=null;
+async function wakelock(){
+  try{ lock = await navigator.wakeLock.request('screen'); }
+  catch(e){ console.log('Wake-lock not available',e);}
+}
+document.addEventListener('visibilitychange',()=>{
+  if(lock && document.visibilityState==='visible') wakelock();
+});
+</script>
 </body>
 </html>
