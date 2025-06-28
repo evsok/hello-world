@@ -12,16 +12,17 @@
     html, body {
       margin: 0;
       padding: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       font-family: sans-serif;
       overflow: hidden;
       background: #ffffff;
+      font-size: 16px; /* Base font size for rem units */
     }
 
     body {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
     }
 
     .runner-box {
@@ -29,11 +30,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 1rem;
     }
 
     .runner-bar {
-      width: 20vw;
-      height: 80vh;
+      width: 30vw; /* Slightly larger for visibility */
+      height: 60vh;
       background-color: #ddd;
       position: relative;
       border-radius: 10px;
@@ -55,18 +57,21 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 3vh;
+      gap: 1.5rem;
+      padding: 1rem;
     }
 
     .inputs {
       display: flex;
-      gap: 2vw;
+      gap: 1rem;
+      width: 100%;
+      justify-content: center;
     }
 
     input[type="number"] {
-      width: 20vw;
-      padding: 1vh;
-      font-size: 6vw;
+      width: 35vw; /* Larger input fields */
+      padding: 0.75rem;
+      font-size: 1.5rem; /* Larger text */
       text-align: center;
       border: 1px solid #aaa;
       border-radius: 6px;
@@ -74,49 +79,58 @@
     }
 
     button {
-      font-size: 6vw;
-      padding: 1vh 2vw;
+      font-size: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      border: 1px solid #aaa;
+      background-color: #f0f0f0;
+      cursor: pointer;
+      width: 50%; /* Wider button for touch */
+      max-width: 200px;
     }
 
     .loop-count {
-      font-size: 10vw;
+      font-size: 2.5rem;
       border: 2px solid black;
-      width: 30vw;
-      height: 30vw;
+      width: 40vw;
+      height: 40vw;
+      max-width: 150px;
+      max-height: 150px;
       text-align: center;
-      line-height: 30vw;
+      line-height: 40vw;
+      border-radius: 10px;
     }
 
-    @media (orientation: portrait) {
-      body {
-        flex-direction: column;
-      }
-
-      .runner-box {
-        height: 50vh;
-        width: 100vw;
-      }
-
+    /* Mobile-specific adjustments */
+    @media (max-width: 600px) or (orientation: portrait) {
       .runner-bar {
-        width: 20vw;
-        height: 40vh;
-      }
-
-      .control-panel {
-        flex: none;
+        width: 40vw; /* Larger bar for small screens */
         height: 50vh;
-        gap: 2vh;
       }
 
       input[type="number"] {
-        width: 25vw;
-        font-size: 6vw;
+        width: 40vw;
+        font-size: 1.25rem;
+        padding: 0.5rem;
+      }
+
+      button {
+        font-size: 1.25rem;
+        padding: 0.5rem 1rem;
+        width: 60%;
       }
 
       .loop-count {
-        width: 25vw;
-        height: 25vw;
-        line-height: 25vw;
+        width: 35vw;
+        height: 35vw;
+        max-width: 120px;
+        max-height: 120px;
+        font-size: 2rem;
+        line-height: 35vw;
+      }
+
+      .control-panel {
+        gap: 1rem;
       }
     }
   </style>
