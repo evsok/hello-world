@@ -1,9 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hello</title>
+  <title>Hello World</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #f0f0f0;
+    }
+    
+    .timer-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .timer-display {
+      font-size: 48px;
+      font-weight: bold;
+      color: #333;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .timer-button {
+      font-size: 18px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .start-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    .start-btn:hover {
+      background-color: #45a049;
+    }
+    
+    .stop-btn {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .stop-btn:hover {
+      background-color: #da190b;
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello, GitHub Pages!</h1>
+  <h1>Hello, World!</h1>
+  
+  <div class="timer-container">
+    <h2>Timer</h2>
+    <div class="timer-display" id="timerDisplay">00:00:00</div>
+    <button class="timer-button start-btn" id="timerButton" onclick="toggleTimer()">Start Timer</button>
+  </div>
+
+  <script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval = null;
+    let isRunning = false;
+
+    function formatTime(milliseconds) {
+      const totalSeconds = Math.floor(milliseconds / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function updateTimer() {
+      elapsedTime = Date.now() - startTime;
+      document.getElementById('timerDisplay').textContent = formatTime(elapsedTime);
+    }
+
+    function startTimer() {
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(updateTimer, 1000);
+      isRunning = true;
+      
+      const button = document.getElementById('timerButton');
+      button.textContent = 'Stop Timer';
+      button.className = 'timer-button stop-btn';
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      isRunning = false;
+      
+      const button = document.getElementById('timerButton');
+      button.textContent = 'Start Timer';
+      button.className = 'timer-button start-btn';
+    }
+
+    function toggleTimer() {
+      if (isRunning) {
+        stopTimer();
+      } else {
+        startTimer();
+      }
+    }
+  </script>
 </body>
 </html>
