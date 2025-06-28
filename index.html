@@ -1,115 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hello World</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch</title>
   <style>
     body {
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 50px;
       background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      height: 100vh;
     }
-    
-    .timer-container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
-      margin: 0 auto;
+
+    form {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
     }
-    
-    .timer-display {
-      font-size: 48px;
-      font-weight: bold;
-      color: #333;
-      margin: 20px 0;
-      font-family: 'Courier New', monospace;
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 100px;
     }
-    
+
     .timer-button {
-      font-size: 18px;
-      padding: 12px 24px;
+      font-size: 16px;
+      padding: 10px 16px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    
-    .start-btn {
       background-color: #4CAF50;
       color: white;
     }
-    
-    .start-btn:hover {
+
+    .timer-button:hover {
       background-color: #45a049;
     }
-    
-    .stop-btn {
-      background-color: #f44336;
-      color: white;
+
+    .bar-container {
+      width: 90px;
+      height: 300px;
+      margin-top: 40px;
+      background-color: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
     }
-    
-    .stop-btn:hover {
-      background-color: #da190b;
+
+    .bar-fill {
+      background-color: #2196F3;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      bottom: 0;
+      transition: height 1s linear;
     }
   </style>
 </head>
 <body>
-  <h1>Hello, World!</h1>
-  
-  <div class="timer-container">
-    <h2>Timer</h2>
-    <div class="timer-display" id="timerDisplay">00:00:00</div>
-    <button class="timer-button start-btn" id="timerButton" onclick="toggleTimer()">Start Timer</button>
+
+  <form onsubmit="setTimer(event)">
+    <input type="number" id="duration" min="1" value="10" required>
+    <button type="submit" class="timer-button">Apply</button>
+  </form>
+
+  <div class="bar-container">
+    <div class="bar-fill" id="barFill"></div>
   </div>
 
   <script>
-    let startTime = 0;
-    let elapsedTime = 0;
+    let totalSeconds = 10;
+    let remainingSeconds = totalSeconds;
     let timerInterval = null;
-    let isRunning = false;
-
-    function formatTime(milliseconds) {
-      const totalSeconds = Math.floor(milliseconds / 1000);
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-      
-      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
 
     function updateTimer() {
-      elapsedTime = Date.now() - startTime;
-      document.getElementById('timerDisplay').textContent = formatTime(elapsedTime);
-    }
+      remainingSeconds--;
 
-    function startTimer() {
-      startTime = Date.now() - elapsedTime;
-      timerInterval = setInterval(updateTimer, 1000);
-      isRunning = true;
-      
-      const button = document.getElementById('timerButton');
-      button.textContent = 'Stop Timer';
-      button.className = 'timer-button stop-btn';
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-      isRunning = false;
-      
-      const button = document.getElementById('timerButton');
-      button.textContent = 'Start Timer';
-      button.className = 'timer-button start-btn';
-    }
-
-    function toggleTimer() {
-      if (isRunning) {
-        stopTimer();
-      } else {
-        startTimer();
+      if (remainingSeconds < 0) {
+        remainingSeconds = totalSeconds;
       }
+
+      const percent = remainingSeconds / totalSeconds;
+      document.getElementById('barFill').style.height = `${percent * 100}%`;
     }
+
+    function startLoopingTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function setTimer(event) {
+      event.preventDefault();
+      const input = document.getElementById('duration');
+      totalSeconds = parseInt(input.value, 10);
+      remainingSeconds = totalSeconds;
+
+      updateTimer();
+      startLoopingTimer();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateTimer();
+    });
   </script>
+
 </body>
 </html>
